@@ -1,0 +1,34 @@
+{
+  "title": "دفترِ حاشیه",
+  "tagline": "یادداشت‌هایی دربارهٔ منطق، ادبیات و چیزهایی که میانشان می‌گذرد",
+  "description": "وبلاگ شخصی آرش عطاری — روش‌های صوری، علوم رایانه، ادبیات فارسی و نظریهٔ ادبی.",
+  "url": "https://weblog.example",
+  "lang": "fa",
+  "dir": "rtl",
+  "author": {
+    "name": "آرش عطاری",
+    "latin": "Arash Attari",
+    "affiliation": "دانشکدهٔ مهندسی کامپیوتر، دانشگاه صنعتی شاهرود",
+    "url": "https://github.com/arashatt"
+  },
+  "perPage": 8,
+  "postsInFeed": 20,
+  "nav": [
+    { "label": "نوشته‌ها", "route": "index" },
+    { "label": "برچسب‌ها", "route": "tags" },
+    { "label": "مجموعه‌ها", "route": "seriesIndex" },
+    { "label": "بایگانی", "route": "archive" },
+    { "label": "واژه‌نامه", "route": "glossary" },
+    { "label": "درباره", "route": "about" }
+  ],
+  "social": {
+    "github": "https://github.com/arashatt"
+  },
+  "giscus": {
+    "enabled": false,
+    "repo": "arashatt/weblog",
+    "repoId": "",
+    "category": "Comments",
+    "categoryId": ""
+  }
+}

@@ -1,0 +1,36 @@
+/* giscus — sepia. Consumes the same values as src/styles/tokens.css, so the
+   comment thread reads as part of the page rather than an embedded app. */
+@import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap");
+
+main {
+  --color-prettylights-syntax-comment: #7c7060;
+  --color-btn-text: #2b2620;
+  --color-btn-bg: #f5ede1;
+  --color-btn-border: #ddd0bd;
+  --color-btn-primary-text: #f5ede1;
+  --color-btn-primary-bg: #2b2620;
+  --color-btn-primary-border: #2b2620;
+  --color-fg-default: #2b2620;
+  --color-fg-muted: #7c7060;
+  --color-fg-subtle: #7c7060;
+  --color-canvas-default: #f5ede1;
+  --color-canvas-subtle: #efe5d6;
+  --color-canvas-overlay: #f5ede1;
+  --color-canvas-inset: #efe5d6;
+  --color-border-default: #ddd0bd;
+  --color-border-muted: #ddd0bd;
+  --color-accent-fg: #2b2620;
+  --color-accent-emphasis: #2b2620;
+  --color-social-reaction-bg-hover: #efe5d6;
+  --color-input-border: #ddd0bd;
+  --color-input-bg: #f5ede1;
+
+  font-family: 'Amiri', serif;
+  direction: rtl;
+  line-height: 1.95;
+}
+main .gsc-comment-box-tabs,
+main .gsc-comment-header { border-color: #ddd0bd; }
+main .gsc-timeline { gap: 1rem; }
+main .gsc-comment > div { border: 1px solid #ddd0bd; border-radius: 0; }
+main .gsc-header { padding-bottom: .8rem; border-bottom: 1px solid #2b2620; }

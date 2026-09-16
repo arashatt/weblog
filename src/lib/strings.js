@@ -1,0 +1,25 @@
+// strings.js — every Persian UI string in one place, so an English locale is a
+// second object rather than a hunt through JSX.
+export const T = {
+  siteNav: 'فهرست', home: 'خانه', posts: 'نوشته‌ها', tags: 'برچسب‌ها',
+  archive: 'بایگانی', series: 'مجموعه‌ها', about: 'درباره', search: 'جست‌وجو',
+  glossary: 'واژه‌نامه', feed: 'خوراک',
+  readMore: 'ادامهٔ نوشته', readingTime: 'زمان خواندن', publishedOn: 'منتشرشده در',
+  updatedOn: 'بازبینی', minutes: 'دقیقه', words: 'واژه',
+  newer: 'تازه‌تر', older: 'پیشین‌تر', page: 'صفحه',
+  nextInSeries: 'بعدی در این مجموعه', prevInSeries: 'پیشین در این مجموعه',
+  related: 'نوشته‌های هم‌سنخ', tocTitle: 'در این نوشته', footnotes: 'یادداشت‌ها',
+  comments: 'دیدگاه‌ها', loadComments: 'نمایش دیدگاه‌ها',
+  share: 'هم‌رسانی', copyLink: 'رونوشت نشانی', copied: 'رونوشت شد', quote: 'نقل',
+  searchPlaceholder: 'جست‌وجو در همهٔ نوشته‌ها…', noResults: 'چیزی یافت نشد.',
+  resultsFor: 'نتیجه برای', clear: 'پاک کردن',
+  display: 'نمایش', textSize: 'اندازهٔ متن', mood: 'حال‌وهوا', font: 'قلم',
+  ornament: 'آرایه', themeAuto: 'خودکار', themeDay: 'روز', themeSepia: 'کاهی',
+  themeNight: 'شب', fontAmiri: 'امیری', fontVazir: 'ساده', on: 'روشن', off: 'خاموش',
+  continueReading: 'ادامهٔ خواندن', bookmarks: 'نشان‌ها', bookmark: 'نشان',
+  bookmarked: '✓ نشان شد', removeBookmark: 'برداشتن نشان',
+  draft: 'پیش‌نویس', notFound: 'این صفحه پیدا نشد.', backHome: 'بازگشت به خانه',
+  offline: 'بی‌اینترنت', tagged: 'برچسب', allTags: 'همهٔ برچسب‌ها',
+  postsCount: 'نوشته', empty: 'هنوز نوشته‌ای اینجا نیست.',
+  install: 'نصب برنامه', update: 'نسخهٔ تازه آماده است', updateGo: 'به‌روزرسانی',
+};

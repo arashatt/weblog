@@ -1,0 +1,61 @@
+{
+  "name": "isabelle",
+  "displayName": "Isabelle/HOL",
+  "scopeName": "source.isabelle",
+  "aliases": ["isar", "thy"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#cartouche" },
+    { "include": "#string" },
+    { "include": "#antiquotation" },
+    { "include": "#outer-keyword" },
+    { "include": "#proof-keyword" },
+    { "include": "#type" },
+    { "include": "#operator" },
+    { "include": "#number" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.block.isabelle",
+      "begin": "\\(\\*",
+      "end": "\\*\\)",
+      "patterns": [{ "include": "#comment" }]
+    },
+    "cartouche": {
+      "name": "string.quoted.other.cartouche.isabelle",
+      "begin": "‹",
+      "end": "›",
+      "patterns": [{ "include": "#cartouche" }, { "include": "#antiquotation" }]
+    },
+    "string": {
+      "name": "string.quoted.double.isabelle",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [{ "name": "constant.character.escape.isabelle", "match": "\\\\." }]
+    },
+    "antiquotation": {
+      "name": "meta.antiquotation.isabelle",
+      "match": "@\\{[^}]*\\}"
+    },
+    "outer-keyword": {
+      "name": "keyword.control.theory.isabelle",
+      "match": "(?<![A-Za-z0-9_'])(theory|imports|begin|end|section|subsection|subsubsection|text|chapter|definition|abbreviation|fun|function|primrec|datatype|type_synonym|record|inductive|inductive_set|codatatype|locale|interpretation|sublocale|class|instantiation|instance|typedef|context|notation|no_notation|syntax|translations|declare|lemmas|export_code|value|term|typ|find_theorems|ML|setup)(?![A-Za-z0-9_'])"
+    },
+    "proof-keyword": {
+      "name": "keyword.other.proof.isabelle",
+      "match": "(?<![A-Za-z0-9_'])(theorem|lemma|corollary|proposition|schematic_goal|proof|qed|by|apply|done|oops|sorry|using|unfolding|assume|assumes|shows|obtain|show|thus|hence|then|also|finally|moreover|ultimately|next|fix|let|where|and|if|else|case|of|with|from|have|note|presume|def|obtains|for|is|when)(?![A-Za-z0-9_'])"
+    },
+    "type": {
+      "name": "entity.name.type.isabelle",
+      "match": "'[a-zA-Z][a-zA-Z0-9_']*"
+    },
+    "operator": {
+      "name": "keyword.operator.isabelle",
+      "match": "(⟹|⟶|→|⇒|∧|∨|¬|∀|∃|λ|⋀|⋁|∈|∉|⊆|∪|∩|≠|≤|≥|≡|⟨|⟩|⦇|⦈|==>|=>|-->|->|\\|\\||&&|<->|\\^|\\+|-|\\*|/|=|<|>)"
+    },
+    "number": {
+      "name": "constant.numeric.isabelle",
+      "match": "(?<![A-Za-z0-9_'])\\d+(\\.\\d+)?"
+    }
+  }
+}

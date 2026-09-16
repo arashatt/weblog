@@ -1,0 +1,25 @@
+{
+  "name": "weblog",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "وبلاگ آرش عطاری — Persian/RTL weblog, prerendered at build.",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/build.mjs",
+    "preview": "vite preview --outDir dist",
+    "verify": "node scripts/verify.mjs",
+    "lint:content": "node scripts/lint-content.mjs",
+    "new-post": "node scripts/new-post.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "katex": "^0.16.11",
+    "shiki": "^1.24.0",
+    "vite": "^6.0.0"
+  }
+}

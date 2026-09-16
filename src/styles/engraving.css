@@ -1,0 +1,139 @@
+/* engraving.css — the ornament layer.
+ *
+ * This file may only ADD. Delete it (and Ornaments.jsx / Frame.jsx) and the
+ * site falls back to the book's bare typography with nothing broken. That is
+ * the design contract, and `data-engrave="off"` is its runtime proof.
+ */
+
+:root{
+  --grain-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+/* ---------- aged paper -------------------------------------------------
+ * A 180×180 noise tile the browser rasterises once and repeats. The obvious
+ * alternative — filter:url(#grain) on a full-viewport layer — re-runs Perlin
+ * noise on every composite and is the single biggest perf hazard here. */
+body::before{
+  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:var(--grain-image);
+  background-size:180px 180px;
+  opacity:var(--grain);
+  mix-blend-mode:var(--grain-blend);
+  transition:opacity .35s ease;
+}
+:root[data-engrave="off"] body::before{display:none}
+
+/* ---------- ornaments --------------------------------------------------- */
+.orn{fill:none;stroke:var(--ornament-ink);stroke-width:1.1;vector-effect:non-scaling-stroke}
+.orn-fill{fill:var(--ornament-ink);stroke:none}
+:root[data-engrave="off"] .orn-svg,
+:root[data-engrave="off"] .frame-corner{display:none}
+
+/* the book's rule–٭–rule divider, kept as the plain fallback */
+.ornament{display:flex;align-items:center;justify-content:center;gap:1rem;margin:0 auto;color:var(--ink)}
+.ornament::before,.ornament::after{content:"";display:block;width:4.2rem;height:1px;background:currentColor}
+.ornament span{font-size:1rem;transform:translateY(-.1em)}
+
+/* the engraved variant: tapered printer's rules around a lozenge star */
+.ornament--engraved{gap:.7rem;color:var(--ornament-ink)}
+.ornament--engraved::before,.ornament--engraved::after{display:none}
+.ornament--engraved .orn-svg{display:block;height:.62rem;width:7rem}
+.ornament--engraved .orn-star{height:1.05rem;width:1.05rem}
+
+.divider{margin:2.6rem auto;display:flex;justify-content:center;align-items:center;gap:1.1rem;
+  color:var(--ornament-ink);font-size:.95rem;letter-spacing:.5em;text-indent:.5em}
+
+/* ---------- double hairline frame --------------------------------------
+ * Two concentric rules from one element — the same geometry as the site icon
+ * (heavy outer, gap, inner hairline), following the theme through the tokens. */
+.frame{
+  position:relative;
+  border:1px solid var(--rule);
+  box-shadow:
+    0 0 0 var(--frame-gap) var(--paper),
+    0 0 0 calc(var(--frame-gap) + 1px) var(--rule);
+}
+.frame--strong{border-color:var(--rule-strong)}
+.frame--strong{box-shadow:
+  0 0 0 var(--frame-gap) var(--paper),
+  0 0 0 calc(var(--frame-gap) + 1px) var(--rule-strong)}
+
+/* Four small SVGs mirrored with CSS transforms. An SVG `transform` attribute
+ * cannot take percentages, so the single-sprite version of this is not
+ * expressible — CSS transforms on the element can. */
+.frame-corner{
+  position:absolute;width:var(--corner);height:var(--corner);
+  color:var(--ornament-ink);pointer-events:none;overflow:visible;
+}
+.fc-tl{top:0;left:0}
+.fc-tr{top:0;right:0;transform:scaleX(-1)}
+.fc-bl{bottom:0;left:0;transform:scaleY(-1)}
+.fc-br{bottom:0;right:0;transform:scale(-1)}
+
+/* ---------- letterpress headings ---------------------------------------- */
+.rule-under{position:relative;padding-bottom:.55rem}
+.rule-under::after{
+  content:"";position:absolute;bottom:0;inset-inline-start:0;
+  width:3.2rem;height:1px;background:var(--ornament-ink);
+}
+
+/* ---------- engraved plate (post card artwork) --------------------------
+ * A real mezzotint feel: the cross-hatch is masked by the image's own
+ * luminance, so dark areas take more hatch. Degrades to a flat 45° hatch. */
+.plate{
+  position:relative;overflow:hidden;background:var(--plate-bg);
+  aspect-ratio:3 / 2;
+}
+.plate img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  filter:grayscale(1) contrast(1.12) brightness(1.02);
+  mix-blend-mode:multiply;
+}
+.plate::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(var(--hatch-angle,45deg),
+    var(--hatch) 0 1px, transparent 1px 3.5px);
+  mix-blend-mode:multiply;
+}
+:root[data-theme="night"] .plate img,
+:root[data-theme="night"] .plate::after{mix-blend-mode:screen}
+:root[data-engrave="off"] .plate::after{display:none}
+:root[data-engrave="off"] .plate img{mix-blend-mode:normal;filter:none}
+
+/* hatch angle varies per post, from a hash of its slug — cards read as
+ * individual without a drop of colour entering the palette */
+.plate[data-hatch="0"]{--hatch-angle:0deg}
+.plate[data-hatch="1"]{--hatch-angle:45deg}
+.plate[data-hatch="2"]{--hatch-angle:90deg}
+.plate[data-hatch="3"]{--hatch-angle:135deg}
+
+/* no cover image → a procedural monogram on the same hatch field */
+.plate--monogram{display:grid;place-items:center}
+.plate--monogram .mono-letter{
+  font-family:var(--fa-font);font-weight:700;
+  font-size:clamp(2.6rem,7vw,4rem);line-height:1;
+  color:var(--ornament-ink);text-shadow:var(--emboss);
+}
+
+/* ---------- drop cap ----------------------------------------------------
+ * Only ever applied when the first letter is one that does NOT join forward
+ * (ا آ د ذ ر ز ژ و …). On a joining letter a drop cap severs the word — the
+ * first thing a Persian reader notices. format.js:dropCapSafe decides. */
+.post-body > p.lead.has-cap::first-letter{
+  font-size:var(--cap-size);
+  float:right;
+  line-height:.82;
+  margin-inline-start:.12em;
+  margin-block-start:.06em;
+  font-weight:700;
+  color:var(--ink);
+  text-shadow:var(--emboss);
+}
+:root[data-engrave="off"] .post-body > p.lead.has-cap::first-letter{
+  font-size:inherit;float:none;line-height:inherit;margin:0;font-weight:inherit;
+}
+
+/* ---------- masthead crest ---------------------------------------------- */
+.crest{display:block;margin-inline:auto;color:var(--ornament-ink)}
+.crest--lg{width:5.4rem;height:2.6rem}
+.crest--sm{width:3.2rem;height:1.5rem}

@@ -1,0 +1,86 @@
+name: build & deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: lint content
+        run: npm run lint:content
+
+      - name: build
+        run: npm run build
+
+      - name: verify
+        run: npm run verify
+
+      - name: upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  # Drafts are excluded from the real build, so a PR gets its own artifact with
+  # them included — review a post before it is published.
+  preview-drafts:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: INCLUDE_DRAFTS=1 npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-with-drafts
+          path: dist
+          retention-days: 7
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    # Lifted to the job so the deploy step's own `if` can read it: a step
+    # cannot test an env var it declares itself.
+    env:
+      HAS_CF: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run verify
+
+      - name: deploy to cloudflare
+        # Skipped, not failed, until the secrets exist — so the repo is useful
+        # before it is connected to a host.
+        if: env.HAS_CF == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy

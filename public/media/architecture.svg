@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="640" height="220" role="img" aria-label="نمودار مراحل ساخت">
+  <style>
+    .b{fill:none;stroke:#111;stroke-width:1.4}
+    .t{font:13px Georgia,serif;fill:#111;text-anchor:middle}
+    .s{font:11px Georgia,serif;fill:#707070;text-anchor:middle}
+    .a{fill:none;stroke:#111;stroke-width:1.2}
+  </style>
+  <rect x="14" y="70" width="118" height="54" class="b"/>
+  <text x="73" y="93" class="t">content/*.md</text><text x="73" y="110" class="s">BookML</text>
+  <path d="M136 97 h44" class="a"/><path d="M180 97 l-8 -4 v8 z" fill="#111"/>
+  <rect x="184" y="48" width="122" height="44" class="b"/>
+  <text x="245" y="68" class="t">parse</text><text x="245" y="83" class="s">front-matter + blocks</text>
+  <rect x="184" y="104" width="122" height="44" class="b"/>
+  <text x="245" y="124" class="t">enrich</text><text x="245" y="139" class="s">shiki + KaTeX</text>
+  <path d="M310 70 h34 v27 M310 126 h34 v-27" class="a"/><path d="M348 97 l-8 -4 v8 z" fill="#111"/>
+  <rect x="352" y="70" width="118" height="54" class="b"/>
+  <text x="411" y="93" class="t">prerender</text><text x="411" y="110" class="s">react-dom/server</text>
+  <path d="M474 97 h40" class="a"/><path d="M514 97 l-8 -4 v8 z" fill="#111"/>
+  <rect x="518" y="46" width="108" height="40" class="b"/>
+  <text x="572" y="71" class="t">HTML ایستا</text>
+  <rect x="518" y="110" width="108" height="40" class="b"/>
+  <text x="572" y="128" class="t">RSS · sitemap</text><text x="572" y="143" class="s">search index</text>
+  <g stroke="#111" stroke-width="1" fill="none" opacity=".55">
+    <path d="M8 8 h26 M8 8 v26 M632 8 h-26 M632 8 v26 M8 212 h26 M8 212 v-26 M632 212 h-26 M632 212 v-26"/>
+  </g>
+</svg>

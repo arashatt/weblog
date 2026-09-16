@@ -1,0 +1,11 @@
+/* index.css — the only stylesheet the app imports.
+ *
+ * Order matters: tokens define the palette, base consumes it, chrome and post
+ * build on both, and engraving may only ever ADD to what came before — so
+ * deleting that one import returns the site to the book's bare typography. */
+@import './tokens.css';
+@import './base.css';
+@import './chrome.css';
+@import './post.css';
+@import './code.css';
+@import './engraving.css';

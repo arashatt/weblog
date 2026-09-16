@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <title><!--head:title--></title>
+  <!--head:meta-->
+  <!--head:links-->
+
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="دفترِ حاشیه" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Vazirmatn:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Theme before first paint. React never renders this, so it cannot cause a
+       hydration mismatch, and there is no flash of the wrong mood. -->
+  <script>
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('weblog:settings') || '{}');
+        var t = s.theme || 'auto';
+        if (t === 'auto') {
+          t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
+        }
+        var el = document.documentElement;
+        if (t !== 'day') el.setAttribute('data-theme', t);
+        if (s.font && s.font !== 'amiri') el.setAttribute('data-font', s.font);
+        if (s.engrave === 'off') el.setAttribute('data-engrave', 'off');
+        if (s.fontScale) el.style.setProperty('--fontscale', s.fontScale);
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.content = { day: '#ffffff', sepia: '#f5ede1', night: '#121212' }[t];
+      } catch (e) { /* private mode: the default mood is fine */ }
+    })();
+  </script>
+</head>
+<body>
+  <div id="root"><!--app--></div>
+  <!--head:data-->
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

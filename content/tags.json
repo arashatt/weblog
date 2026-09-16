@@ -1,0 +1,15 @@
+{
+  "_comment": "Persian tag → URL slug. Unmapped tags fall back to transliteration, which is URL-safe but usually unreadable — map anything you expect to share.",
+  "نظریهٔ ادبی": "literary-theory",
+  "پست‌مدرنیسم": "postmodernism",
+  "دریدا": "derrida",
+  "نوشتار": "writing",
+  "روش‌های صوری": "formal-methods",
+  "ایزابل": "isabelle",
+  "منطق": "logic",
+  "فلسفهٔ سیاسی": "political-philosophy",
+  "معماری نرم‌افزار": "architecture",
+  "وب": "web",
+  "کارایی": "performance",
+  "راهنما": "guide"
+}

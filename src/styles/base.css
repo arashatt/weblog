@@ -1,0 +1,187 @@
+/* base.css — reset, page frame, and the prose blocks BookML produces. */
+
+*{margin:0;padding:0;box-sizing:border-box}
+*{-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,summary{touch-action:manipulation}
+
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--fa-font);
+  font-size:var(--body);
+  line-height:2.05;
+  -webkit-font-smoothing:antialiased;
+  transition:background-color .35s ease, color .35s ease;
+  /* The grain overlay uses mix-blend-mode, which creates a stacking context.
+   * Without this, it re-parents the frosted masthead and every position:fixed
+   * child (drawer, popovers, update pill). Do not remove. */
+  isolation:isolate;
+  min-height:100svh;
+}
+
+/* Latin runs inside Persian text, isolated so the bidi algorithm leaves them alone */
+.lr{direction:ltr;unicode-bidi:isolate;font-family:var(--lr-font);font-style:italic;font-size:1em}
+
+::selection{background:var(--accent);color:var(--paper)}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{
+  outline:2px solid var(--ink);outline-offset:3px;border-radius:2px;
+}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important}
+  .reveal{opacity:1 !important;transform:none !important;filter:none !important}
+}
+
+/* ---------- the page grid ---------------------------------------------
+ * A named grid rather than a max-width, so a code block, a table or a wide
+ * figure can break the measure without leaving the flow or needing negative
+ * margins. Everything defaults to the text column. */
+main{
+  display:grid;
+  grid-template-columns:
+    [full-start] minmax(var(--gutter),1fr)
+    [wide-start] minmax(0, calc((var(--measure-wide) - var(--measure)) / 2))
+    [text-start] min(var(--measure), 100% - calc(var(--gutter) * 2)) [text-end]
+    minmax(0, calc((var(--measure-wide) - var(--measure)) / 2)) [wide-end]
+    minmax(var(--gutter),1fr) [full-end];
+  padding-top:var(--headh);
+}
+main > *{grid-column:text}
+.bleed-wide{grid-column:wide}
+.bleed-full{grid-column:full}
+
+/* ---------- prose ------------------------------------------------------ */
+p{margin-bottom:1.4rem;text-align:justify;text-justify:inter-word;
+  hyphens:auto;-webkit-hyphens:auto;text-wrap:pretty}
+p:last-child{margin-bottom:0}
+
+h1,h2,h3{font-weight:700;letter-spacing:-.008em;text-shadow:var(--emboss)}
+h1{font-size:clamp(1.9rem,5.4vw,2.7rem);line-height:1.45}
+h2{font-size:1.45rem;margin:2.8rem 0 1.1rem;line-height:1.6}
+h3{font-size:1.18rem;margin:2rem 0 .9rem;line-height:1.7}
+
+a{color:inherit}
+.prose a{
+  color:var(--ink);text-decoration:none;
+  background-image:linear-gradient(var(--ink),var(--ink));
+  background-size:100% 1px;background-position:100% calc(100% - .12em);background-repeat:no-repeat;
+  padding-bottom:.12em;transition:background-size .25s ease,opacity .2s ease;
+}
+.prose a:hover{opacity:.62}
+
+blockquote{
+  margin:2.4rem 0;padding-inline-start:1.5rem;
+  border-inline-start:1px solid var(--ink);
+  font-size:1.06rem;line-height:2;text-align:justify;color:var(--ink);
+}
+
+strong{font-weight:700}
+em{font-style:italic}
+
+.prose ul,.prose ol{margin:0 0 1.4rem;padding-inline-start:1.6rem}
+.prose li{margin-bottom:.35rem;text-align:justify}
+.prose ul{list-style:none}
+.prose ul > li{position:relative}
+.prose ul > li::before{
+  content:"";position:absolute;inset-inline-start:-1.05rem;top:.92em;
+  width:.3rem;height:.3rem;background:var(--ornament-ink);transform:rotate(45deg);
+}
+.prose ol{list-style:none;counter-reset:ol}
+.prose ol > li{counter-increment:ol;position:relative}
+.prose ol > li::before{
+  content:counter(ol, persian) ".";position:absolute;inset-inline-start:-1.7rem;
+  color:var(--quiet);font-size:.92em;
+}
+
+/* ---------- poetry ----------------------------------------------------- */
+.beyt-block{margin:2.8rem 0;display:grid;gap:.55rem;justify-items:center}
+.beyt{display:grid;grid-template-columns:1fr 1fr;gap:3.2rem;max-width:34rem;width:100%}
+.mesra{white-space:nowrap;text-align:center;font-size:1.16rem}
+.poet{margin-top:1.1rem;color:var(--quiet);font-size:.95rem}
+@media (max-width:640px){
+  .beyt{grid-template-columns:1fr;gap:.15rem;max-width:none}
+  .mesra{white-space:normal;text-align:center}
+  .beyt .mesra:last-child{padding-inline-start:3.5rem}
+}
+
+/* ---------- epigraph, footnotes ---------------------------------------- */
+.epigraph{display:flex;justify-content:flex-start;margin:0 0 2.4rem}
+.epigraph .inner{max-width:70%;text-align:justify;font-size:1.02rem;line-height:1.95}
+.epigraph .src{color:var(--quiet);font-size:.9rem;margin-top:.35rem}
+@media (max-width:480px){ .epigraph .inner{max-width:86%} }
+
+.fn{white-space:nowrap}
+.fn sup,sup.noteref{font-size:.7em}
+.noteref{cursor:pointer;padding-inline:.12em}
+.footnotes{margin-top:3rem;padding-top:1.1rem;font-size:.97rem;line-height:1.9;position:relative}
+.footnotes::before{content:"";position:absolute;top:0;inset-inline-start:0;
+  width:9rem;height:1px;background:var(--ink)}
+.footnotes li{list-style:none;margin-bottom:.25rem}
+.footnotes li::before{content:attr(data-n) ". ";color:var(--quiet)}
+
+.note-pop{
+  position:fixed;z-index:60;transform:translateX(-50%);
+  background:var(--paper);color:var(--ink);
+  border:1px solid var(--hairline);border-radius:10px;box-shadow:var(--shadow);
+  padding:.55rem .9rem;max-width:min(19rem,86vw);
+  font-size:.94rem;line-height:1.9;text-align:start;
+  animation:notepop .16s ease both;
+}
+@keyframes notepop{from{opacity:0;transform:translateX(-50%) translateY(5px)}
+  to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* ---------- figures & tables ------------------------------------------- */
+figure{margin:2.6rem 0}
+figure img,figure svg{display:block;width:100%;height:auto;border:1px solid var(--hairline)}
+figcaption{margin-top:.7rem;font-size:.92rem;line-height:1.85;color:var(--quiet);text-align:center}
+
+.table-wrap{margin:2.4rem 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:.98rem;line-height:1.8}
+thead th{
+  font-weight:700;text-align:start;padding:.55rem .8rem;
+  border-bottom:1px solid var(--ink);white-space:nowrap;
+}
+tbody td{padding:.55rem .8rem;border-bottom:1px dotted var(--hairline);text-align:start;vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+
+/* ---------- callouts ---------------------------------------------------- */
+.callout{
+  margin:2.2rem 0;padding:1rem 1.15rem;position:relative;
+  border:1px solid var(--hairline);background:var(--plate-bg);
+}
+.callout::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;
+  width:2px;background:var(--ornament-ink)}
+.callout .callout-kind{
+  display:block;font-weight:700;font-size:.92rem;letter-spacing:.02em;
+  color:var(--quiet);margin-bottom:.35rem;
+}
+.callout p{margin-bottom:0;text-align:justify}
+.callout--theorem,.callout--definition{border-color:var(--ink)}
+.callout--theorem .callout-kind,.callout--definition .callout-kind{color:var(--ink)}
+.callout--warn::before{background:var(--ink)}
+
+/* ---------- reveal ------------------------------------------------------ */
+.reveal{opacity:0;transform:translateY(14px);filter:blur(1px);
+  transition:opacity .7s cubic-bezier(.2,.7,.2,1),
+             transform .7s cubic-bezier(.2,.7,.2,1),
+             filter .7s ease}
+.reveal.in{opacity:1;transform:none;filter:none}
+
+/* ---------- delayed, pointer-only tooltips ----------------------------- */
+[data-tip]{position:relative}
+[data-tip]::after{
+  content:attr(data-tip);position:absolute;top:calc(100% + .6rem);
+  background:var(--ink);color:var(--paper);
+  font-family:var(--fa-font);font-size:.82rem;font-weight:400;line-height:1.85;
+  padding:.5rem .85rem;width:max-content;max-width:14.5rem;white-space:normal;
+  opacity:0;visibility:hidden;pointer-events:none;z-index:40;
+  transition:opacity .3s ease, visibility 0s linear .3s;
+}
+[data-tip]:hover::after,[data-tip]:focus-visible::after{
+  opacity:1;visibility:visible;transition-delay:.85s;
+}
+@media (hover:none){ [data-tip]::after{display:none} }

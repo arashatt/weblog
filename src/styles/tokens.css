@@ -1,0 +1,112 @@
+/* tokens.css — the whole palette, in one place.
+ *
+ * Inherited from the book site: flat ink on paper, three moods, no gradients,
+ * no colour in the chrome. Added for the weblog: the engraving layer's rules,
+ * grain and plate values — all derived from --ink/--paper so a theme swap
+ * recolours the ornament along with everything else.
+ */
+
+:root{
+  /* --- ink & paper ---------------------------------------------------- */
+  --ink:#111111;
+  --paper:#ffffff;
+  --hairline:#e2e2e2;
+  --quiet:#707070;
+  --unread:#bcbcbc;
+  --accent:#111111;
+  --shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.06);
+
+  /* --- measure & rhythm ------------------------------------------------ */
+  --measure:36rem;          /* the reading column */
+  --measure-wide:52rem;     /* code, tables, wide figures break out to here */
+  --gutter:1.4rem;
+  --headh:calc(3.4rem + env(safe-area-inset-top, 0px));
+  --fontscale:1;
+  --body:calc(1.22rem * var(--fontscale));
+
+  /* --- type ------------------------------------------------------------ */
+  --fa-font:'Amiri',serif;
+  --lr-font:'EB Garamond','Georgia',serif;
+  --mono:'IBM Plex Mono','DejaVu Sans Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* --- engraving ------------------------------------------------------- */
+  --rule:var(--hairline);
+  --rule-strong:var(--ink);
+  --ornament-ink:color-mix(in srgb, var(--ink) 62%, var(--paper));
+  --frame-gap:.34rem;
+  --corner:2.3rem;
+  --grain:.038;
+  --grain-blend:multiply;
+  --plate-bg:color-mix(in srgb, var(--ink) 3%, var(--paper));
+  --hatch:color-mix(in srgb, var(--ink) 20%, transparent);
+  --emboss:0 1px 0 color-mix(in srgb, var(--paper) 70%, transparent);
+  --cap-size:3.1em;
+}
+
+:root[data-font="vazir"]{
+  --fa-font:'Vazirmatn','Amiri',sans-serif;
+}
+
+:root[data-theme="sepia"]{
+  --ink:#2b2620;
+  --paper:#f5ede1;
+  --hairline:#ddd0bd;
+  --quiet:#7c7060;
+  --unread:#c3b6a1;
+  --accent:#2b2620;
+  --grain:.06;
+  --ornament-ink:color-mix(in srgb, var(--ink) 58%, var(--paper));
+}
+
+:root[data-theme="night"]{
+  --ink:#e9e7e2;
+  --paper:#121212;
+  --hairline:#2c2c2c;
+  --quiet:#8b8b8b;
+  --unread:#565656;
+  --accent:#e9e7e2;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 30px rgba(0,0,0,.5);
+  /* multiply over #121212 is invisible mud; screen reads as light speckle */
+  --grain:.022;
+  --grain-blend:screen;
+  --emboss:none;
+  --ornament-ink:color-mix(in srgb, var(--ink) 45%, var(--paper));
+  --hatch:color-mix(in srgb, var(--paper) 14%, transparent);
+  --plate-bg:color-mix(in srgb, var(--paper) 4%, var(--ink) 0%);
+}
+
+/* No JS (or JS still loading) and the reader's OS prefers dark: match it.
+ * The inline head script sets data-theme before paint, so this only ever
+ * applies to the no-script case — hence the :not() guard. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme]){
+    --ink:#e9e7e2;
+    --paper:#121212;
+    --hairline:#2c2c2c;
+    --quiet:#8b8b8b;
+    --unread:#565656;
+    --accent:#e9e7e2;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 30px rgba(0,0,0,.5);
+    --grain:.022;
+    --grain-blend:screen;
+    --emboss:none;
+    --ornament-ink:color-mix(in srgb, var(--ink) 45%, var(--paper));
+    --hatch:color-mix(in srgb, var(--paper) 14%, transparent);
+  }
+}
+
+/* The ornament must be provably subtractable: this is the readability valve. */
+:root[data-engrave="off"]{
+  --grain:0;
+  --emboss:none;
+}
+
+@media (min-width:1100px){
+  :root{ --measure:42rem; --measure-wide:58rem; --body:calc(1.28rem * var(--fontscale)); }
+}
+@media (min-width:1500px){
+  :root{ --measure:46rem; --measure-wide:64rem; --body:calc(1.32rem * var(--fontscale)); }
+}
+@media (max-width:480px){
+  :root{ --body:calc(1.13rem * var(--fontscale)); --gutter:1.15rem; }
+}

@@ -1,0 +1,74 @@
+/* code.css — Shiki output and KaTeX MathML, made theme-aware and RTL-safe.
+ *
+ * Shiki ran at build time with three themes and defaultColor:false, so every
+ * span carries --s-day / --s-sepia / --s-night. Choosing between them is a
+ * pure CSS concern; switching mood costs zero JavaScript. */
+
+.code-block{
+  margin:2.4rem 0;
+  position:relative;
+  border:1px solid var(--hairline);
+  background:var(--plate-bg);
+}
+.code-block pre{
+  margin:0;padding:1rem 1.15rem;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  direction:ltr;text-align:left;unicode-bidi:isolate;
+}
+.code-block code{
+  font-family:var(--mono);
+  font-size:calc(.86rem * var(--fontscale));
+  line-height:1.85;
+  white-space:pre;
+  -webkit-font-smoothing:auto;
+}
+.code-block .line{display:block;min-height:1.85em}
+
+.code-lang{
+  position:absolute;top:0;inset-inline-end:0;
+  font-family:var(--lr-font);font-style:normal;font-size:.72rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--quiet);
+  padding:.2rem .6rem;border-inline-start:1px solid var(--hairline);
+  border-bottom:1px solid var(--hairline);background:var(--paper);
+  pointer-events:none;
+}
+
+/* theme resolution — day is the default, the other two override */
+.code-block .shiki,
+.code-block .shiki span{ color:var(--s-day); font-weight:var(--s-day-font-weight);
+  font-style:var(--s-day-font-style); text-decoration:var(--s-day-text-decoration); }
+.code-block .shiki{ background-color:transparent !important; }
+
+:root[data-theme="sepia"] .code-block .shiki,
+:root[data-theme="sepia"] .code-block .shiki span{ color:var(--s-sepia);
+  font-weight:var(--s-sepia-font-weight); font-style:var(--s-sepia-font-style);
+  text-decoration:var(--s-sepia-text-decoration); }
+
+:root[data-theme="night"] .code-block .shiki,
+:root[data-theme="night"] .code-block .shiki span{ color:var(--s-night);
+  font-weight:var(--s-night-font-weight); font-style:var(--s-night-font-style);
+  text-decoration:var(--s-night-text-decoration); }
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme]) .code-block .shiki,
+  :root:not([data-theme]) .code-block .shiki span{ color:var(--s-night);
+    font-weight:var(--s-night-font-weight); font-style:var(--s-night-font-style); }
+}
+
+/* inline code — an LTR island, set a touch smaller than the Persian around it */
+code.lr,.prose code:not(.shiki code){
+  font-family:var(--mono);font-style:normal;
+  font-size:.86em;direction:ltr;unicode-bidi:isolate;
+  padding:.08em .32em;border:1px solid var(--hairline);border-radius:3px;
+  background:var(--plate-bg);white-space:nowrap;
+}
+
+/* ---------- math --------------------------------------------------------
+ * KaTeX emitted MathML: no CSS, no web fonts, no JS. The one thing it does
+ * need is bidi isolation — a formula is an LTR island in an RTL page. */
+.math{direction:ltr;unicode-bidi:isolate;display:inline-block}
+.math--display{display:block;margin:2rem 0;text-align:center;overflow-x:auto;
+  overflow-y:hidden;padding-block:.2rem}
+.math math{font-size:1.06em}
+.math--display math{font-size:1.14em}
+.math--error{color:var(--quiet);border-style:dashed}
