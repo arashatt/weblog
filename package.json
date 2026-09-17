@@ -9,7 +9,6 @@
     "build": "node scripts/build.mjs",
     "preview": "vite preview --outDir dist",
     "verify": "node scripts/verify.mjs",
-    "deploy": "wrangler deploy",
     "lint:content": "node scripts/lint-content.mjs",
     "new-post": "node scripts/new-post.mjs"
   },
@@ -21,7 +20,6 @@
     "@vitejs/plugin-react": "^4.3.4",
     "katex": "^0.16.11",
     "shiki": "^1.24.0",
-    "vite": "^6.0.0",
-    "wrangler": "^4.133.0"
+    "vite": "^6.0.0"
   }
 }

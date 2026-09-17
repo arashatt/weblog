@@ -196,16 +196,18 @@ Ornament artwork can be replaced with your own files — see
 `not_found_handling: "404-page"` (every route is a real file now, so an unknown
 URL must be a real 404, not a soft-200 shell) and `auto-trailing-slash`.
 
-`wrangler` is a **declared devDependency**, not something `npx` fetches at deploy
-time. That is deliberate: a deploy step that reaches out to the npm registry
-fails whenever the build container's npm cache is cold or corrupt, which is a
-confusing way to lose a green build. `npm run deploy` runs the local binary.
+`wrangler` is deliberately **not** a dependency of this repo — Cloudflare owns
+the deploy and supplies it. Pinning a version here would only risk drifting
+from whatever the builder expects.
 
 There are two ways to deploy and you want exactly one of them:
 
 - **Cloudflare Workers Builds** (connect the repo in the Cloudflare dashboard):
-  build command `npm run build`, deploy command `npm run deploy`. No secrets
-  needed — Cloudflare already holds the credentials.
+  build command `npm run build`, deploy command `npx wrangler deploy`. No
+  secrets needed — Cloudflare already holds the credentials. If a deploy fails
+  with an `ENOENT` under `.npm/_cacache` while fetching wrangler, that is the
+  builder's npm cache, not this repo: retry the build, clearing the build cache
+  if it recurs.
 - **GitHub Actions** — `.github/workflows/deploy.yml` builds and verifies every
   push and pull request, and deploys `main`. Its deploy step skips itself
   unless these two repository secrets exist, so it stays dormant if you chose
