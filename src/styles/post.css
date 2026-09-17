@@ -209,16 +209,15 @@
 .toc li::before{content:none}
 
 @media (min-width:1280px){
-  /* on a wide screen the TOC leaves the flow and rides the margin */
-  .post-layout .toc{
-    position:sticky;top:calc(var(--headh) + 1.5rem);
-    grid-column:wide-start / text-start;
-    margin:0 0 0 1.5rem;align-self:start;
-    background:none;border:none;padding:0;
-    font-size:.92rem;max-height:calc(100svh - var(--headh) - 4rem);overflow-y:auto;
-  }
-  .post-layout .toc summary{color:var(--quiet);font-size:.82rem;letter-spacing:.04em}
-  .post-layout .toc summary::after{content:none}
+  /* No TOC on wide screens.
+   *
+   * This once tried to float it into the page margin, and could not: the
+   * `wide-start`/`text-start` grid lines it named are defined on `main`, but
+   * .toc lives inside <article class="post-layout">, which is a grid ITEM and
+   * not a grid container — so grid-column was inert. All that survived was
+   * position:sticky over a stripped background, which pinned the list to the
+   * viewport and let the article text scroll underneath it. */
+  .post-layout .toc{display:none}
 }
 
 /* ---------- related, share, comments ---------------------------------------- */

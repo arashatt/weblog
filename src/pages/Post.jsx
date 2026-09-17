@@ -7,6 +7,7 @@ import Related from '../components/Related.jsx';
 import ShareBar from '../components/ShareBar.jsx';
 import Comments from '../components/Comments.jsx';
 import { setPos, getMarks, addMark } from '../lib/store.js';
+import { faDigits } from '../lib/bookml.js';
 import { T } from '../lib/strings.js';
 
 export default function Post({ site, data, settings }) {
@@ -88,7 +89,7 @@ export default function Post({ site, data, settings }) {
       <header className="post-head">
         {s && (
           <div className="kicker">
-            <A href={href.series(s.slug)}>{s.title}</A> ــ بخش {s.part} از {s.total}
+            <A href={href.series(s.slug)}>{s.title}</A> ــ بخش {faDigits(s.part)} از {faDigits(s.total)}
           </div>
         )}
         <h1>{post.title}</h1>
