@@ -158,6 +158,20 @@ The palette, measure and typography come from the book site unchanged:
 `--ink`, `--paper`, `--hairline`, `--quiet`, a 36→46rem measure, Amiri for
 Persian, EB Garamond for Latin runs, IBM Plex Mono for code.
 
+Listings use a **magazine grid** (`src/components/MagazineGrid.jsx`). Posts arrive
+as one flat reverse-chronological list and the grid decides how much room each
+gets: `lead` (full width), `feature` (half), `brief` (third) and `line` (a ruled
+row with a dotted leader). Hierarchy comes from position, never from
+front-matter, so the front page reshapes itself on every publish.
+
+The grid is six columns and every weight divides into it — 6, 3, 2, 6 — so the
+packer chooses *row sizes* first and derives each weight from its row. A short
+final row shrinks to what is left and takes the weight that fills it, which is
+why the page can never end on a half-empty band. A lead with no `cover:` becomes
+a centred text lead rather than a wide field of texture, and plates take a fixed
+height per weight so a cover and a monogram in the same row still line their
+headlines up.
+
 The engraving layer — `src/styles/engraving.css`, `components/Ornaments.jsx`,
 `components/Frame.jsx` — adds aged-paper grain, double hairline frames, corner
 flourishes, a crest, star dividers and the mezzotint card plates. It may only

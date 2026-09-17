@@ -17,22 +17,35 @@
   max-width:28rem;margin-inline:auto;text-wrap:balance}
 .hero .ornament,.hero .ornament--engraved{margin-top:1.9rem}
 
-/* ---------- post cards --------------------------------------------------- */
-.post-list{display:grid;gap:2.6rem;padding:1rem 0 2rem}
-@media (min-width:900px){
-  .post-list{grid-template-columns:1fr 1fr;gap:2.4rem 2rem}
-  .post-list .post-card--lead{grid-column:1 / -1}
+/* ---------- the magazine grid -------------------------------------------
+ * Six columns, and every weight divides into it cleanly — lead 6, feature 3,
+ * brief 2, line 6 — so a row either fills exactly or does not exist.
+ * MagazineGrid.jsx guarantees the row sizes; this only has to place them.
+ *
+ * The six-column structure holds all the way down to 760px rather than
+ * stepping through a four-column stage: at four columns a row of three briefs
+ * would wrap 2 + 1 and leave a hole, which is precisely the orphan the row
+ * packer exists to prevent. */
+.mag{
+  display:grid;
+  grid-template-columns:repeat(6, minmax(0, 1fr));
+  gap:2.7rem 1.9rem;
+  align-items:start;
+  padding:1.2rem 0 2rem;
+}
+.m-lead,.m-line{grid-column:span 6}
+.m-feature{grid-column:span 3}
+.m-brief{grid-column:span 2}
+
+@media (max-width:1099px){ .mag{gap:2.1rem 1.35rem} }
+@media (max-width:760px){
+  .mag{grid-template-columns:1fr;gap:1.9rem}
+  .m-lead,.m-feature,.m-brief,.m-line{grid-column:1 / -1}
 }
 
-.post-card{
-  display:flex;flex-direction:column;
-  background:var(--paper);
-  padding:1.2rem 1.3rem 1.35rem;
-}
-.post-card .plate{margin:-1.2rem -1.3rem 1.1rem;aspect-ratio:16 / 7}
-.post-card--lead .plate{aspect-ratio:21 / 8}
-.post-card h2{margin:0;font-size:1.32rem;line-height:1.6}
-.post-card--lead h2{font-size:clamp(1.5rem,3.4vw,1.9rem)}
+/* ---------- cards, by editorial weight ---------------------------------- */
+.post-card{display:flex;flex-direction:column;background:var(--paper)}
+.post-card h2{margin:0;line-height:1.6}
 .post-card h2 a{color:inherit;text-decoration:none}
 .post-card h2 a:hover{opacity:.7}
 .post-card .card-meta{
@@ -43,6 +56,82 @@
   display:inline-block;transform:translateY(-.25em)}
 .post-card .summary{margin-top:.8rem;font-size:.99rem;line-height:1.95;text-align:justify;color:var(--ink)}
 .post-card .card-foot{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.45rem;align-items:center}
+
+/* the line above a headline: its series, else its first tag */
+.post-card .kicker{
+  align-self:flex-start;margin-bottom:.3rem;
+  font-size:.79rem;letter-spacing:.08em;color:var(--quiet);
+  text-decoration:none;border-bottom:1px solid transparent;
+  transition:color .2s ease,border-color .2s ease;
+}
+.post-card .kicker:hover{color:var(--ink);border-color:var(--ink)}
+
+/* lead — the front page's top story */
+.post-card--lead{padding:1.4rem 1.6rem 1.6rem}
+/* Plates take a FIXED height per weight rather than an aspect ratio. Two
+ * cards in the same row can hold a cover and a monogram, and an aspect ratio
+ * gives them different heights — so their headlines start at different
+ * baselines and the row stops reading as a row. */
+.post-card--lead .plate{margin:-1.4rem -1.6rem 1.25rem;aspect-ratio:auto;height:clamp(210px,24vw,320px)}
+.post-card--lead .kicker{font-size:.85rem}
+.post-card--lead h2{font-size:clamp(1.55rem,3.2vw,2.1rem);line-height:1.5}
+.post-card--lead .summary{font-size:1.04rem}
+
+/* A lead with no cover is a TEXT lead: no plate, so the type has to do the
+ * work. Centred, wider, with a rule under the deck — the shape a magazine
+ * gives its opening essay when there is no photograph to run. */
+.post-card--textlead{padding:2.4rem 2rem 2rem;text-align:center;align-items:center}
+.post-card--textlead .kicker{align-self:center}
+.post-card--textlead h2{font-size:clamp(1.8rem,4vw,2.6rem);max-width:20ch;text-wrap:balance}
+.post-card--textlead .card-meta{justify-content:center}
+.post-card--textlead .summary{
+  text-align:center;max-width:52ch;margin-inline:auto;
+  padding-bottom:1.2rem;border-bottom:1px solid var(--hairline);
+}
+.post-card--textlead .card-foot{justify-content:center;margin-top:1.1rem}
+
+/* A monogram shares its weight's plate height so rows stay aligned; the
+ * letter grows to fill it, so the band reads as an ornamental initial rather
+ * than as an empty field waiting for an image. */
+.plate--monogram .mono-letter{font-size:3.4rem}
+.post-card--brief .plate--monogram .mono-letter{font-size:2.4rem}
+
+/* feature — half width, still framed */
+.post-card--feature{padding:1.15rem 1.25rem 1.3rem}
+.post-card--feature .plate{margin:-1.15rem -1.25rem 1rem;aspect-ratio:auto;height:186px}
+.post-card--feature h2{font-size:1.26rem}
+.post-card--feature .summary{
+  font-size:.95rem;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
+}
+
+/* brief — a third of a row, unframed under a heavy rule */
+.post-card--brief{border-top:1px solid var(--ink);padding-top:.85rem}
+.post-card--brief .plate{aspect-ratio:auto;height:124px;margin-bottom:.8rem}
+.post-card--brief h2{font-size:1.03rem;line-height:1.65}
+.post-card--brief .card-meta{font-size:.82rem;margin-top:.4rem}
+
+/* line — the ruled row that closes a page, no plate at all */
+.post-card--line{
+  flex-direction:row;align-items:baseline;gap:.9rem;
+  border-top:1px solid var(--hairline);padding-top:.7rem;
+}
+.post-card--line .line-main{color:var(--ink);text-decoration:none;min-width:0}
+.post-card--line .line-title{font-size:1.05rem;font-weight:700;
+  border-bottom:1px solid transparent;transition:border-color .2s ease}
+.post-card--line:hover .line-title{border-color:var(--ink)}
+.post-card--line .leader{flex:1;min-width:1.5rem;
+  border-bottom:1px dotted var(--hairline);transform:translateY(-.3em)}
+.post-card--line .line-meta{
+  display:flex;align-items:baseline;gap:.9rem;white-space:nowrap;
+  color:var(--quiet);font-size:.87rem;font-variant-numeric:tabular-nums;
+}
+.post-card--line .line-tag{letter-spacing:.04em}
+@media (max-width:520px){
+  .post-card--line{flex-wrap:wrap;gap:.25rem .9rem}
+  .post-card--line .leader{display:none}
+  .post-card--line .line-main{flex:1 1 100%}
+}
 
 .tag-chip{
   font-size:.82rem;color:var(--quiet);text-decoration:none;
@@ -169,20 +258,15 @@
 .tag-cloud .count{font-size:.82rem;color:var(--quiet);font-variant-numeric:tabular-nums}
 .tag-cloud a:hover .count{color:var(--paper);opacity:.75}
 
-.archive-year{margin-bottom:2.6rem}
+.archive-year{margin-bottom:2.8rem}
 .archive-year > h2{
-  display:flex;align-items:center;gap:.9rem;font-size:1.25rem;margin:0 0 .8rem;
+  display:flex;align-items:baseline;gap:.9rem;font-size:1.35rem;margin:0 0 .3rem;
 }
-.archive-year > h2::after{content:"";flex:1;height:1px;background:var(--hairline)}
-.index-row{
-  display:flex;align-items:baseline;gap:.8rem;padding:.5rem 0;
-  color:var(--ink);text-decoration:none;
+.archive-year > h2::after{content:"";flex:1;height:1px;background:var(--ink);align-self:center}
+.archive-year .year-count{
+  order:3;font-size:.8rem;font-weight:400;color:var(--quiet);letter-spacing:.03em;white-space:nowrap;
 }
-.index-row:hover .ir-title{border-bottom:1px solid var(--ink)}
-.index-row .ir-title{font-size:1.06rem}
-.index-row .leader{flex:1;border-bottom:1px dotted var(--hairline);transform:translateY(-.35em);min-width:1rem}
-.index-row .ir-date{color:var(--quiet);font-size:.88rem;white-space:nowrap;font-variant-numeric:tabular-nums}
-
+.archive-year .post-card--line:first-of-type{border-top-color:var(--ink)}
 .series-card{
   display:block;text-decoration:none;color:var(--ink);
   padding:1.1rem 1.2rem;margin-bottom:1.4rem;background:var(--paper);

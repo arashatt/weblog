@@ -38,7 +38,7 @@
   --grain:.038;
   --grain-blend:multiply;
   --plate-bg:color-mix(in srgb, var(--ink) 3%, var(--paper));
-  --hatch:color-mix(in srgb, var(--ink) 20%, transparent);
+  --hatch:color-mix(in srgb, var(--ink) 13%, transparent);
   --emboss:0 1px 0 color-mix(in srgb, var(--paper) 70%, transparent);
   --cap-size:3.1em;
 }
@@ -71,7 +71,7 @@
   --grain-blend:screen;
   --emboss:none;
   --ornament-ink:color-mix(in srgb, var(--ink) 45%, var(--paper));
-  --hatch:color-mix(in srgb, var(--paper) 14%, transparent);
+  --hatch:color-mix(in srgb, var(--paper) 11%, transparent);
   --plate-bg:color-mix(in srgb, var(--paper) 4%, var(--ink) 0%);
 }
 
@@ -91,7 +91,7 @@
     --grain-blend:screen;
     --emboss:none;
     --ornament-ink:color-mix(in srgb, var(--ink) 45%, var(--paper));
-    --hatch:color-mix(in srgb, var(--paper) 14%, transparent);
+    --hatch:color-mix(in srgb, var(--paper) 11%, transparent);
   }
 }
 

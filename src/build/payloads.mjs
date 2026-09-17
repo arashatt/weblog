@@ -17,6 +17,9 @@ export const cardMeta = (p) => ({
   hatch: p.hatch,
   draft: p.draft,
   series: p.series,
+  // The human title, resolved from series.json. A card kicker rendering the
+  // raw slug ("formal-methods") is the giveaway that it never got resolved.
+  seriesTitle: p.seriesNav?.title || null,
   seriesPart: p.seriesPart,
 });
 

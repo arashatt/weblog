@@ -3,6 +3,7 @@
 import { A, href } from '../lib/router.jsx';
 import { Ornament } from '../components/Ornaments.jsx';
 import PostCard from '../components/PostCard.jsx';
+import MagazineGrid from '../components/MagazineGrid.jsx';
 import Pagination from '../components/Pagination.jsx';
 import Prose from '../components/Prose.jsx';
 import Frame from '../components/Frame.jsx';
@@ -37,9 +38,7 @@ export function Tag({ data }) {
   return (
     <>
       <Head title={data.tag.name} lede={`${faDigits(data.total)} ${T.postsCount}`} />
-      <div className="post-list">
-        {data.posts.map((p) => <PostCard key={p.slug} post={p} />)}
-      </div>
+      <MagazineGrid posts={data.posts} allowLead={data.page === 1} />
       <Pagination page={data.page} pages={data.pages} hrefFor={(n) => href.tag(data.tag.slug, n)} />
     </>
   );
@@ -64,9 +63,8 @@ export function Series({ data }) {
   return (
     <>
       <Head title={data.series.title} lede={data.series.description} />
-      <div className="post-list">
-        {data.posts.map((p) => <PostCard key={p.slug} post={p} />)}
-      </div>
+      {/* A series reads in order, so the earliest part leads, not the newest. */}
+      <MagazineGrid posts={data.posts} />
     </>
   );
 }
@@ -75,16 +73,13 @@ export function Archive({ data }) {
   return (
     <>
       <Head title={T.archive} lede={`${faDigits(data.total)} ${T.postsCount}`} />
+      {/* Departments by year, each a run of ruled rows. The archive is a
+          lookup surface, so it keeps the scannable line weight throughout
+          rather than opening every year with a lead. */}
       {data.years.map((y) => (
-        <section className="archive-year" key={y.year}>
-          <h2>{faDigits(y.year)}</h2>
-          {y.posts.map((p) => (
-            <A className="index-row" key={p.slug} href={href.post(p.slug)}>
-              <span className="ir-title">{p.title}</span>
-              <span className="leader" aria-hidden="true" />
-              <span className="ir-date">{p.date.faShort}</span>
-            </A>
-          ))}
+        <section className="archive-year bleed-wide" key={y.year}>
+          <h2>{faDigits(y.year)}<span className="year-count">{faDigits(y.posts.length)} {T.postsCount}</span></h2>
+          {y.posts.map((p) => <PostCard key={p.slug} post={p} variant="line" />)}
         </section>
       ))}
     </>
