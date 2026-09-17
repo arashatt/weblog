@@ -4,7 +4,7 @@
 // produced at build time by shiki and KaTeX from local files, never from user
 // input. Everything else is structured data rendered as ordinary elements.
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { faDigits } from '../lib/bookml.js';
 import { T } from '../lib/strings.js';
 
@@ -135,8 +135,12 @@ function Block({ b, bi, lead, dropCap, onNote }) {
 
 /* ---------- footnote popover ------------------------------------------------ */
 
+const EDGE = 10;   // breathing room between the popover and the viewport edge
+
 function NotePop({ note, at, onClose }) {
   const ref = useRef(null);
+  const [pos, setPos] = useState(null);
+
   useEffect(() => {
     const close = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
     const esc = (e) => { if (e.key === 'Escape') onClose(); };
@@ -144,10 +148,39 @@ function NotePop({ note, at, onClose }) {
     document.addEventListener('keydown', esc);
     return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', esc); };
   }, [onClose]);
+
+  // Keep the popover inside the viewport. It is centred on its marker
+  // (translateX(-50%)), so a marker near either edge would otherwise hang half
+  // the box off-screen — and one low in the viewport would open below the fold.
+  //
+  // The box has to be MEASURED rather than predicted: its width depends on the
+  // note's text, the reader's font scale and the active theme. useLayoutEffect
+  // so the correction is committed before paint and nothing visibly jumps.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !at) return;
+    const box = el.getBoundingClientRect();
+    const half = box.width / 2;
+
+    const lo = half + EDGE;
+    const hi = window.innerWidth - half - EDGE;
+    // lo > hi only if the box is wider than the viewport allows; centre it.
+    const left = lo > hi ? window.innerWidth / 2 : Math.min(Math.max(at.left, lo), hi);
+
+    const fitsBelow = at.below + box.height + EDGE <= window.innerHeight;
+    const fitsAbove = at.above - box.height - EDGE >= 0;
+    const top = fitsBelow || !fitsAbove ? at.below : at.above - box.height;
+
+    setPos({ top, left });
+  }, [at, note]);
+
   if (!note || !at) return null;
+  // First paint uses the raw anchor; the layout effect above corrects it in the
+  // same commit, so this value is never actually painted when it is wrong.
+  const p = pos || { top: at.below, left: at.left };
   return (
     <div className="note-pop" ref={ref} role="note"
-         style={{ top: `${at.top}px`, left: `${at.left}px` }}>
+         style={{ top: `${p.top}px`, left: `${p.left}px` }}>
       {note.kind === 'latin'
         ? <span className="lr" dir="ltr">{note.text}</span>
         : <>{note.text} <span style={{ whiteSpace: 'nowrap' }}>ــ م.</span></>}
@@ -165,7 +198,8 @@ export default function Prose({ doc, dropCap = false, showFootnotes = true, clas
     setPop((prev) => {
       if (prev && prev.n === n) return null;
       const r = el.getBoundingClientRect();
-      return { n, at: { top: r.bottom + 8, left: r.left + r.width / 2 } };
+      // Both candidate anchors, so NotePop can flip when there is no room below.
+      return { n, at: { left: r.left + r.width / 2, below: r.bottom + 8, above: r.top - 8 } };
     });
   }, []);
 

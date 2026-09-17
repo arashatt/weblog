@@ -128,6 +128,9 @@ em{font-style:italic}
   background:var(--paper);color:var(--ink);
   border:1px solid var(--hairline);border-radius:10px;box-shadow:var(--shadow);
   padding:.55rem .9rem;max-width:min(19rem,86vw);
+  /* a long note must not grow past the viewport either — and NotePop measures
+     the capped height, so its above/below flip stays correct */
+  max-height:calc(100svh - 2rem);overflow-y:auto;overscroll-behavior:contain;
   font-size:.94rem;line-height:1.9;text-align:start;
   animation:notepop .16s ease both;
 }
@@ -184,4 +187,9 @@ tbody tr:last-child td{border-bottom:none}
 [data-tip]:hover::after,[data-tip]:focus-visible::after{
   opacity:1;visibility:visible;transition-delay:.85s;
 }
+/* Anchor each tooltip to the edge it grows AWAY from. Without this the box
+   takes its button's static inline position and grows outward, so a 14.5rem
+   tooltip on a 2.75rem button pinned to the screen edge hangs off it. */
+.mh-start [data-tip]::after{inset-inline-start:0}
+.mh-end [data-tip]::after{inset-inline-end:0}
 @media (hover:none){ [data-tip]::after{display:none} }
