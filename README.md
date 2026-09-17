@@ -196,8 +196,20 @@ Ornament artwork can be replaced with your own files — see
 `not_found_handling: "404-page"` (every route is a real file now, so an unknown
 URL must be a real 404, not a soft-200 shell) and `auto-trailing-slash`.
 
-`.github/workflows/deploy.yml` builds and verifies every push and pull request,
-and deploys `main`. It needs two repository secrets:
+`wrangler` is a **declared devDependency**, not something `npx` fetches at deploy
+time. That is deliberate: a deploy step that reaches out to the npm registry
+fails whenever the build container's npm cache is cold or corrupt, which is a
+confusing way to lose a green build. `npm run deploy` runs the local binary.
+
+There are two ways to deploy and you want exactly one of them:
+
+- **Cloudflare Workers Builds** (connect the repo in the Cloudflare dashboard):
+  build command `npm run build`, deploy command `npm run deploy`. No secrets
+  needed — Cloudflare already holds the credentials.
+- **GitHub Actions** — `.github/workflows/deploy.yml` builds and verifies every
+  push and pull request, and deploys `main`. Its deploy step skips itself
+  unless these two repository secrets exist, so it stays dormant if you chose
+  the option above:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
